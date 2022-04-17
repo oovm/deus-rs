@@ -188,7 +188,7 @@ fn gauss_jordan_zf2(mat: Vec<Vec<usize>>, expected: Vec<usize>) -> Option<Vec<us
 
 #[test]
 fn test(){
-    let s = StructLevel::new(3,3);
+    let s = StructLevel::new(9,9);
     if let Some(s) = solve(&s) {
         for (i, j) in s {
             println!("({}, {})", i + 1, j + 1)

@@ -1,9 +1,4 @@
-# Lights Out Solver
+Rust Graphics
+=============
 
-## Basic
-
-```rust
-```
-
-
-## Todo list
+Rust template project for monorepo
