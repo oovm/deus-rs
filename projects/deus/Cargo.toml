@@ -1,8 +1,8 @@
 [package]
-name = "geass"
+name = "deus"
 version = "0.1.0"
 authors = ["Aster <galaster@foxmail.com>"]
-description = "15puzzle solver"
+description = "waifu2x solver"
 edition = "2018"
 license = "MPL-2.0"
 readme = "Readme.md"
@@ -10,5 +10,6 @@ repository = "https://github.com/GalAster/nqueens-rs"
 exclude = []
 
 [dev-dependencies]
-pretty_assertions = "0.3"
-ndarray = "0.15.4"
+lights-out = "0.1.0"
+sudoku = "0.7.0"
+nonogram = "0.3.0"

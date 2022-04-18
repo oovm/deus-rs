@@ -1,0 +1,2 @@
+mod sudoku;
+mod nonogram;
