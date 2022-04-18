@@ -1,1 +1,2 @@
+mod mini;
 mod standard;
