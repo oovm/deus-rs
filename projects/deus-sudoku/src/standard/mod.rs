@@ -1,8 +1,11 @@
-use std::{convert::TryInto, str::FromStr};
+use num::integer::Roots;
+use std::str::FromStr;
+use sudoku::Sudoku as Sudoku3;
 
 mod display;
-mod parse;
+mod ser_der;
 
+#[derive(Clone)]
 pub struct Sudoku {}
 
 impl Sudoku {}
@@ -30,15 +33,7 @@ impl Sudoku {
 }
 
 impl SudokuBoard {
-    pub(crate) fn filled(&self) -> Vec<usize> {
-        self.state.iter().chain([0usize].iter().cycle()).take(self.rank.pow(4)).collect()
-    }
-    pub(crate) fn filled_u8(&self) -> Vec<u8> {
-        self.state.iter().map(|x| *x as u8).chain([0u8].iter().cycle()).take(self.rank.pow(4)).collect()
-    }
-}
-
-impl SudokuBoard {
+    #[track_caller]
     pub fn new(v: Vec<usize>) -> Self {
         let rank = v.len().sqrt().sqrt();
         assert_eq!(rank.pow(4), v.len());
@@ -47,51 +42,37 @@ impl SudokuBoard {
     pub fn new_with_rank(v: Vec<usize>, rank: usize) -> Self {
         Self { rank, state: v }
     }
-}
-
-impl SudokuBoard {
+    #[track_caller]
+    pub fn generate(rank: usize) -> Self {
+        match rank {
+            3 => Self::from(Sudoku3::generate_filled()),
+            _ => unimplemented!(),
+        }
+    }
+    #[track_caller]
+    pub fn generate_uniquely(rank: usize) -> Self {
+        match rank {
+            3 => Self::from(Sudoku3::generate_unique()),
+            _ => unimplemented!(),
+        }
+    }
     pub fn is_solvable(&self) -> bool {
         match self.rank {
-            3 => {
-                let array: [u8; 81] = self.filled_u8().try_into().unwrap();
-                let mut solver = sudoku::Sudoku(array);
-                solver.solve_one().is_some()
-            }
+            3 => Sudoku3::from(self).solve_one().is_some(),
             _ => unimplemented!(),
         }
     }
-    pub fn is_unique_solvable(&self) -> bool {
+    pub fn is_uniquely_solvable(&self) -> bool {
         match self.rank {
-            3 => {
-                let array: [u8; 81] = self.filled_u8().try_into().unwrap();
-                let mut solver = sudoku::Sudoku(array);
-                solver.is_uniquely_solvable()
-            }
+            3 => Sudoku3::from(self).is_uniquely_solvable(),
             _ => unimplemented!(),
         }
     }
-}
-
-pub fn generate(rank: usize) -> SudokuBoard {
-    SudokuBoard { rank, state: vec![] }
-}
-
-impl FromStr for SudokuBoard {
-    type Err = &'static str;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut out = vec![];
-        for c in s.as_bytes() {
-            let n = match c {
-                b'.' | b'*' | b'-' | b'_' => 0,
-                b'0'...b'9' => c - b'0',
-                b'a'...b'z' => c - b'a' + 10,
-                b'A'...b'Z' => c - b'A' + 10,
-                _ => return Err("invalid character"),
-            };
-            out.push(n as usize);
+    pub fn solve(&self) -> Self {
+        match self.rank {
+            3 => Self::from(Sudoku3::generate_unique()),
+            _ => unimplemented!(),
         }
-        Ok(SudokuBoard::new(out))
     }
 }
 
@@ -102,5 +83,5 @@ fn test() {
     let sudoku = SudokuBoard::from_str(sudoku_line).unwrap();
 
     println!("{}", sudoku.is_solvable());
-    println!("{}", sudoku.is_unique_solvable());
+    println!("{}", sudoku.is_uniquely_solvable());
 }

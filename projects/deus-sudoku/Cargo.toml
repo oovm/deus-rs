@@ -12,3 +12,4 @@ exclude = ["/tests/*", "/.idea/*", "/benches/*"]
 [dependencies]
 sudoku = "0.7.0"
 sudokugen = "0.3.0"
+num = "0.4.0"
