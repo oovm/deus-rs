@@ -1,5 +1,8 @@
 use num::integer::Roots;
-use std::str::FromStr;
+use std::{
+    fmt::{Display, Formatter},
+    str::FromStr,
+};
 use sudoku::Sudoku as Sudoku3;
 
 mod display;
@@ -58,7 +61,7 @@ impl SudokuBoard {
     }
     pub fn is_solvable(&self) -> bool {
         match self.rank {
-            3 => Sudoku3::from(self).solve_one().is_some(),
+            3 => Sudoku3::from(self).solve_unique().is_some(),
             _ => unimplemented!(),
         }
     }
@@ -68,9 +71,24 @@ impl SudokuBoard {
             _ => unimplemented!(),
         }
     }
-    pub fn solve(&self) -> Self {
+    pub fn solve(&self) -> Option<Self> {
         match self.rank {
-            3 => Self::from(Sudoku3::generate_unique()),
+            3 => Sudoku3::from(self).solve_one().map(|s| s.into()),
+            _ => unimplemented!(),
+        }
+    }
+    pub fn solve_unique(&self) -> Option<Self> {
+        match self.rank {
+            3 => Sudoku3::from(self).solve_unique().map(|s| s.into()),
+            _ => unimplemented!(),
+        }
+    }
+    pub fn solve_at_most(&self, limit: usize) -> Vec<Self> {
+        match self.rank {
+            3 => {
+                let all = Sudoku3::from(self).solve_at_most(limit);
+                all.into_iter().map(|s| s.into()).collect()
+            }
             _ => unimplemented!(),
         }
     }
@@ -82,6 +100,7 @@ fn test() {
 
     let sudoku = SudokuBoard::from_str(sudoku_line).unwrap();
 
-    println!("{}", sudoku.is_solvable());
-    println!("{}", sudoku.is_uniquely_solvable());
+    println!("{}", sudoku.solve().unwrap());
+    println!();
+    println!("{:#}", sudoku.solve().unwrap());
 }

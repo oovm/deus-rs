@@ -23,6 +23,20 @@ impl FromStr for SudokuBoard {
     }
 }
 
+macro_rules! from_str {
+    ($($t:ty),*) => {
+        $(
+            impl From<$t> for SudokuBoard {
+                fn from(input: $t) -> Self {
+                    SudokuBoard::from_str(&input).unwrap()
+                }
+            }
+        )*
+    };
+}
+
+from_str![&str, &String, String];
+
 impl From<Sudoku3> for SudokuBoard {
     fn from(game: Sudoku3) -> Self {
         Self { rank: 3, state: game.to_bytes().iter().map(|s| *s as usize).collect() }
@@ -32,7 +46,6 @@ impl From<Sudoku3> for SudokuBoard {
 impl From<&SudokuBoard> for Sudoku3 {
     fn from(game: &SudokuBoard) -> Self {
         debug_assert_eq!(game.rank, 3);
-
         Sudoku3::from_bytes_slice(&game.filled_u8()).unwrap()
     }
 }
