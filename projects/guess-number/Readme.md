@@ -2,30 +2,33 @@
 
 ## Basic
 
-```rust
-```
+将问题连续化, 设目标在 $0$ 到 $1$ 之间.
 
+我们猜一次，如果能够排除最大的区间就是最好的方法
 
-## Todo list
+如果我们猜a在(0, 1),也就是数据落在0-a之间，当然落在0-a之间的概率就是a
+此时我们能够排除1-a的区间宽度。
 
+但是数据落在(a,1)之间的概率位1-a，此时
+我们能够排除的数据区间宽度位a，所以这两种情况取均值，得到留下区间得
+平均宽度w（用全概率公式）：
 
-- https://mathworld.wolfram.com/LightsOutPuzzle.html
+w(a) ＝ (w位a得函数)
 
-- https://zhuanlan.zhihu.com/p/21265602
-- https://zhuanlan.zhihu.com/p/53646257
-- http://yanhaijing.com/inverter/
+P(数据小于a)×P(留下a宽度|数据小于a) ＋ P(数据大于a)×P(留下1-a宽度|数据大于a)
 
-```wolfram
-t = {
-  {1, 1, 0},
-  {1, 1, 1},
-  {0, 1, 1}
-  }
-i = IdentityMatrix[3]
-m = ArrayFlatten[{
-   {t, i, 0},
-   {i, t, i},
-   {0, i, t}
-   }]
-Inverse[m, Modulus -> 2] . Table[Subscript[x, i], {i, 9}] // TableForm
-```
+＝ a * a + (1-a) * (1-a) = 1-2a+2a*a;
+
+对上式求最小值，显然有最小值，故先求导数，
+
+求得：
+a = 1/2;
+
+此时
+w = 1/2;
+
+所以按照二分查找法最快，它的查找次数位
+
+2^{2-2 p} \binom{2 p-2}{n} & 0\leq n\leq 2 p-2 \\
+
+\frac{4^{p-1} \Gamma (2 p-1)}{\Gamma (n+1) \Gamma (-n+2 p-1)}

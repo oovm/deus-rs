@@ -1,26 +1,5 @@
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 
-#[test]
-fn test() {
-    (0..100)
-        .into_par_iter()
-        .map(|_| {
-            let game = GuessingNumber::new(1, 100);
-            let a = game.random_select();
-            let b = game.golden_divide();
-            let c = game.dichotomy();
-        })
-        .collect::<Vec<_>>();
-    for _ in 0..100 {
-        let a = game.random_select();
-        let b = game.golden_divide();
-        let c = game.dichotomy();
-    }
-
-    //  println!("{}", game.golden_divide());
-    //   println!("{}", game.dichotomy());
-}
-
 pub struct GuessingNumber {
     min: usize,
     max: usize,
@@ -30,19 +9,19 @@ pub struct GuessingNumber {
 
 impl GuessingNumber {
     pub fn new(min: usize, max: usize) -> Self {
-        Self { min, max, target: thread_rng().gen_range(min..=max) }
+        let mut rng = SmallRng::from_rng(thread_rng()).unwrap();
+        Self { min, max, target: rng.gen_range(min..=max), rng }
     }
 }
 
 impl GuessingNumber {
-    pub fn random_select(&self) -> usize {
+    pub fn random_select(&mut self) -> usize {
         let mut n = 0;
         let mut min = self.min;
         let mut max = self.max;
-        let mut rng = SmallRng::from_rng(thread_rng()).unwrap();
         let mut guess: usize;
         loop {
-            guess = rng.gen_range(min..=max);
+            guess = self.rng.gen_range(min..=max);
             n += 1;
             if guess > self.target {
                 max = guess;
@@ -59,7 +38,7 @@ impl GuessingNumber {
     pub fn golden_divide(&self) -> usize {
         let mut n = 0;
         let mut min = self.min;
-        let mut max = self.max;
+        let mut max = self.max + 1;
         let mut guess: usize;
         loop {
             guess = (max as f32 * 0.618034 + min as f32 * 0.381966) as usize;
@@ -79,11 +58,12 @@ impl GuessingNumber {
     pub fn dichotomy(&self) -> usize {
         let mut n = 0;
         let mut min = self.min;
-        let mut max = self.max;
+        let mut max = self.max + 1;
         let mut guess: usize;
         loop {
             guess = (min + max) / 2;
             n += 1;
+
             if guess > self.target {
                 max = guess;
                 continue;
