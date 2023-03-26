@@ -9,6 +9,9 @@ readme = "Readme.md"
 repository = "https://github.com/GalAster/nqueens-rs"
 exclude = []
 
+[dependencies]
+deus-nqueens = "0.4.2"
+
 [dev-dependencies]
 lights-out = "0.1.0"
 sudoku = "0.7.0"

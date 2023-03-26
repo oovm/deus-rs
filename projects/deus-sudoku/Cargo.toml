@@ -11,8 +11,8 @@ exclude = ["/tests/*", "/.idea/*", "/benches/*"]
 
 [dependencies]
 sudoku = "0.7.0"
-sudokugen = "0.3.0"
+sudokugen = "0.3.1"
 num = "0.4.0"
 sudoku_rs = "0.2.3"
-sudoku-solver = "0.4.0"
+sudoku-solver = "0.5.0"
 sudoku-variants = "0.2.1"

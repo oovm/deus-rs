@@ -16,10 +16,10 @@ crate-type = ["cdylib"]
 [dependencies]
 num = "0.4.0"
 rand = { version = "0.8.5", features = ["small_rng"] }
-rayon = "1.5.2"
+rayon = "1.7.0"
 
 [dependencies.wolfram-library-link]
-version = "0.2.3"
+version = "0.2.9"
 optional = true
 
 [features]
