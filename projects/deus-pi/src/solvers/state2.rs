@@ -17,8 +17,8 @@ impl StructLevel {
     pub fn new(sx: usize, sy: usize) -> StructLevel {
         let v = vec![vec![0usize; sx]; sy];
         StructLevel {
-            sx,
-            sy,
+            sx: sx,
+            sy: sy,
             level: v,
         }
     }
